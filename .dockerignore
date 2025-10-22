@@ -1,0 +1,13 @@
+Dockerfile
+.dockerignore
+README.md
+
+db.sqlite3
+*.sqlite3
+*.sqlite3-journal
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+staticfiles/
+media/

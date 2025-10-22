@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import logout, login, authenticate
 
-from .forms import *
+from authentication.forms import *
 
 def login_view(request):
     context = {}

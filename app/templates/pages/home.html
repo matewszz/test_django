@@ -1,66 +1,244 @@
 {% extends "pages/base.html" %}
-
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-    <div class="focused_content">
-        <div id="content_home">
-            <h1>Lista de Vacinas Goiás</h1>
+  <div class="focused_content">
+    <div id="content_home">
+      <h1>Lista de Vacinas Goiás</h1>
 
-            <label for="search">Buscar por nome:</label>
-            <input type="text" id="search" placeholder="Digite o nome...">
+      <label for="search">Buscar por nome:</label>
+      <input type="text" id="search" placeholder="Digite o nome...">
 
-            <label for="cityFilter">Filtrar por cidade:</label>
-            <select id="cityFilter">
-                <option value="">Todas as cidades</option>
-                <option value="São Paulo">São Paulo</option>
-                <option value="Rio de Janeiro">Rio de Janeiro</option>
-                <option value="Belo Horizonte">Belo Horizonte</option>
-            </select>
+      {% if adm %}
+        <label for="cityFilter">Filtrar por cidade:</label>
+        <select id="cityFilter">
+          <option value="">Todas as cidades</option>
+          {% for item in todos_municipios %}
+            <option value="{{item.municipio}}">{{item.municipio}}</option>
+          {% endfor %}
+        </select>
+      {% endif %}
 
-            <table id="vaccineTable">
-                <thead>
-                    <tr>
-                        <th>Nome da criança</th>
-                        <th>Nome do responsável</th>
-                        <th>Cidade</th>
-                        <th>Última Vacina</th>
-                        <th>Próxima Vacina</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in todas_criancas %}
-                        <tr>
-                            <td>{{item.nome}} {{item.sobrenome}}</td>
-                            <td>{{item.sobrenome}}</td>
-                            <td>São Paulo</td>
-                            <td>15/10/2023</td>
-                            <td>15/04/2024</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+      <table id="vaccineTable">
+        <thead>
+          <tr>
+            <th>Nome da criança</th>
+            <th>Nome do responsável</th>
+            <th>Cidade</th>
+            <th>Última Vacina</th>
+            <th>Próxima Vacina</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in todas_criancas %}
+            <tr class="js-child-row child-hover"
+                data-child-name="{{item.nome}} {{item.sobrenome}}"
+                data-guardian="{{item.responsavel.get_full_name}}"
+                data-city="{{item.responsavel.municipio.municipio}}"
+                data-uf="{{item.responsavel.municipio.uf}}"
+                data-gender="{{item.genero|default:'—'}}"
+                data-last="{{item.ultima_vacina|date:'d/m/Y'}}"
+                data-next="{{item.proxima_vacina|date:'d/m/Y'}}"
+                data-guardian-phone="{{item.responsavel.telefone|default:'—'}}">
+              <td>{{item.nome}} {{item.sobrenome}}</td>
+              <td>{{item.responsavel.get_full_name}}</td>
+              <td>{{item.responsavel.municipio.municipio}}</td>
+              <td>{{item.ultima_vacina}}</td>
+              <td>{{item.proxima_vacina}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
+
+  {% comment %} CARTÃO DE VACINA {% endcomment %}
+  <div id="vaccineCardModal" class="vc-modal" aria-hidden="true">
+    <div class="vc-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="vc-title">
+      <div class="vc-card">
+        <div class="vc-card__header">
+          <div class="vc-card__brand">
+            <div class="vc-card__seal">💉</div>
+            <div>
+              <h2 id="vc-title" class="vc-card__title">Cartão de Vacinação</h2>
+              <div class="vc-card__subtitle">Sistema Municipal de Saúde</div>
+            </div>
+          </div>
+          <div class="vc-status" id="vc-status">—</div>
+        </div>
+
+        <div class="vc-card__body">
+          <div class="vc-grid">
+            <div class="vc-field">
+              <label>Criança</label>
+              <div id="vc-child-name" class="vc-value">—</div>
+            </div>
+            <div class="vc-field">
+              <label>Gênero</label>
+              <div id="vc-gender" class="vc-value">—</div>
+            </div>
+            <div class="vc-field">
+              <label>Responsável</label>
+              <div id="vc-guardian" class="vc-value">—</div>
+            </div>
+            <div class="vc-field">
+              <label>Telefone do responsável</label>
+              <div id="vc-guardian-phone" class="vc-value">—</div>
+            </div>
+            <div class="vc-field">
+              <label>Município / UF</label>
+              <div id="vc-city" class="vc-value">—</div>
+            </div>
+            <div class="vc-field">
+              <label>Última vacina</label>
+              <div id="vc-last" class="vc-value">—</div>
+            </div>
+            <div class="vc-field">
+              <label>Próxima vacina</label>
+              <div id="vc-next" class="vc-value">—</div>
+            </div>
+          </div>
+
+          <div class="vc-timeline">
+            <div class="vc-tl-item">
+              <div class="vc-tl-dot"></div>
+              <div class="vc-tl-content">
+                <div class="vc-tl-label">Última dose</div>
+                <div id="vc-tl-last" class="vc-tl-date">—</div>
+              </div>
+            </div>
+            <div class="vc-tl-spacer"></div>
+            <div class="vc-tl-item">
+              <div class="vc-tl-dot vc-tl-dot--next"></div>
+              <div class="vc-tl-content">
+                <div class="vc-tl-label">Próxima dose</div>
+                <div id="vc-tl-next" class="vc-tl-date">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="vc-table-wrap">
+            <table class="vc-table">
+              <thead>
+                <tr>
+                  <th>Vacina</th>
+                  <th>Dose</th>
+                  <th>Data</th>
+                  <th>Lote</th>
+                  <th>Unidade</th>
+                </tr>
+              </thead>
+              <tbody id="vc-doses">
+                <tr class="vc-empty">
+                  <td colspan="5">Sem registros detalhados nesta visualização.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 {% endblock content %}
 
 {% block javascripts %}
-    <script>
-        const originalData = Array.from(document.querySelectorAll('#vaccineTable tbody tr'));
-        function filterTable() {
-            const searchValue = document.getElementById('search').value.toLowerCase();
-            const cityValue = document.getElementById('cityFilter').value;
-            const rows = document.querySelectorAll('#vaccineTable tbody tr');
-            rows.forEach(row => {
-                const name = row.cells[0].textContent.toLowerCase();
-                const city = row.cells[1].textContent;
-                const matchesSearch = name.includes(searchValue);
-                const matchesCity = cityValue === '' || city === cityValue;
+    {% comment %} FILTRO {% endcomment %}
+  <script>
+    const originalData = Array.from(document.querySelectorAll('#vaccineTable tbody tr'));
+    function filterTable() {
+      const searchValue = document.getElementById('search').value.toLowerCase();
+      const cityValue = document.getElementById('cityFilter')?.value || '';
+      const rows = document.querySelectorAll('#vaccineTable tbody tr');
+      rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const city = row.cells[2].textContent;
+        const matchesSearch = name.includes(searchValue);
+        const matchesCity = cityValue === '' || city === cityValue;
+        row.style.display = matchesSearch && matchesCity ? '' : 'none';
+      });
+    }
+    document.getElementById('search').addEventListener('input', filterTable);
+    const cityFilter = document.getElementById('cityFilter');
+    if (cityFilter) cityFilter.addEventListener('change', filterTable);
+  </script>
 
-                row.style.display = matchesSearch && matchesCity ? '' : 'none';
-            });
-        }
-        document.getElementById('search').addEventListener('input', filterTable);
-        document.getElementById('cityFilter').addEventListener('change', filterTable);
-    </script>
+  {% comment %} MODAL {% endcomment %}
+  <script>
+    (function(){
+      const modal = document.getElementById('vaccineCardModal');
+
+      function parseBRDate(s){
+        if(!s || typeof s !== 'string') return null;
+        const m = s.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if(!m) return null;
+        const [_, dd, mm, yyyy] = m;
+        return new Date(+yyyy, +mm-1, +dd);
+      }
+
+      function computeStatus(nextStr){
+        const next = parseBRDate(nextStr);
+        if(!next) return {label:'Sem agendamento', cls:''};
+        const today = new Date(); today.setHours(0,0,0,0);
+        const diff = (next - today) / (1000*60*60*24);
+        if (diff < 0)  return {label:'Atrasada', cls:'vc-status--late'};
+        if (diff <= 15) return {label:'Vence em breve', cls:'vc-status--warning'};
+        return {label:'Em dia', cls:'vc-status--ok'};
+      }
+
+      function openModal(data){
+        document.getElementById('vc-child-name').textContent = data.childName || '—';
+        document.getElementById('vc-gender').textContent = data.gender || '—';
+        document.getElementById('vc-guardian').textContent = data.guardian || '—';
+        document.getElementById('vc-guardian-phone').textContent = data.guardianPhone || '—';
+        document.getElementById('vc-city').textContent = data.city ? `${data.city} / ${data.uf || ''}`.trim() : '—';
+        document.getElementById('vc-last').textContent = data.last || '—';
+        document.getElementById('vc-next').textContent = data.next || '—';
+        document.getElementById('vc-tl-last').textContent = data.last || '—';
+        document.getElementById('vc-tl-next').textContent = data.next || '—';
+
+        const statusEl = document.getElementById('vc-status');
+        statusEl.className = 'vc-status';
+        const st = computeStatus(data.next);
+        statusEl.textContent = st.label;
+        if (st.cls) statusEl.classList.add(st.cls);
+
+        const tb = document.getElementById('vc-doses');
+        tb.innerHTML = `
+        <tr class="vc-empty"><td colspan="5">Sem registros detalhados nesta visualização.</td></tr>
+        `;
+
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+
+      document.querySelectorAll('.js-child-row').forEach(tr=>{
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', ()=>{
+          openModal({
+            childName: tr.dataset.childName,
+            guardian: tr.dataset.guardian,
+            city: tr.dataset.city,
+            uf: tr.dataset.uf,
+            gender: tr.dataset.gender,
+            last: tr.dataset.last,
+            next: tr.dataset.next,
+            guardianPhone: tr.dataset.guardianPhone
+          });
+        });
+      });
+
+      function closeModal(){
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+      modal.addEventListener('click', e => {
+        if (e.target === modal) closeModal();
+      });
+
+    })();
+  </script>
+
 {% endblock javascripts %}

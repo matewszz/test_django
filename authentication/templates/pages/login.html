@@ -37,7 +37,7 @@
                 </div>
             {% endif %}
             </div>
-            <span class="span">Esqueceu a senha?</span>
+            <a href="{% url 'reset_password' %}" class="span" >Esqueceu a senha?</a>
           </div>
         <button class="button-submit">Entrar</button>
         <p class="p">Não tem uma conta? <a href="{% url "app:cadastro" %}" class="span">Cadastre-se</a></p>

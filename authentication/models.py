@@ -20,6 +20,7 @@ class User(AbstractUser):
     status = models.CharField(max_length=60, choices=STATUS_CHOICES, default="Ativo")
     permissao = models.CharField(max_length=50, default="Cliente", null=True, choices=PERMISSAO_CHOICES)
     cpf = models.CharField(max_length=20, blank=True, null=True)
+    municipio = models.ForeignKey("app.Municipio", on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.username
@@ -35,7 +36,7 @@ class Crianca(models.Model):
     ultima_vacina = models.DateField(blank=True, null=True)
     proxima_vacina = models.DateField(blank=True, null=True)
     genero = models.CharField(max_length=100, null=True, blank=True, choices=GENERO_CHOICE)
-    responsavel = models.ForeignKey("authentication.Crianca", on_delete=models.CASCADE, blank=True, null=True)
+    responsavel = models.ForeignKey("authentication.User", on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         db_table = "crianca"

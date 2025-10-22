@@ -14,61 +14,37 @@
             <p class="title_sidebar">
                 <b>Supervisão</b>
             </p>
-            <p class="name_sidebar">Mateus Matos</p>
+            <p class="name_sidebar">
+                {% if user.first_name %}
+                    {{ user.get_full_name|slice:":20" }}
+                {% else %}
+                    {{user.username}}
+                {% endif %}
+            </p>
         </div>
     </div>
     <div class="nav">
         <div class="menu">
             <p class="title_sidebar">Soluções</p>
             <ul style="padding-left: 0rem;">
-                {% if request.user.rule == "Administrador" %}
-                    <li>
-                        <a href="{% url "app:admin_page" %}">
-                            <i class="ph-duotone ph-user-circle-gear"></i>
-                            <span class="text">Admin Center</span>
-                        </a>
-                    </li>
-                {% endif %}
                 <li>
-                    <a href="javascript:">
+                    <a href="/">
                         <i class="ph-bold ph-list-checks"></i>
-                        <span class="text">Formulários</span>
+                        <span class="text">Lista</span>
                     </a>
-                    <ul class="sub-menu">
-                        <li>
-                            <a href="">
-                                <span class="text">Divórcio</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <span class="text">Caminho 2</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <span class="text">Caminho 3</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <span class="text">Caminho 4</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
-                <li>
+                {% comment %} <li>
                     <a href="">
                         <i class="ph-light ph-calendar"></i>
                         <span class="text">Agenda</span>
                     </a>
-                </li>
+                </li> {% endcomment %}
 
-            <li>
-                    <a href="">
-                        <i class="ph-duotone ph-files"></i>
-                        <span class="text">Documentos</span>
+                <li>
+                    <a href="{% url "app:dashboard" %}">
+                        <i class="ph-duotone ph-chart-pie-slice"></i>
+                        <span class="text">Dashboard</span>
                     </a>
                 </li>
             </ul>
@@ -77,13 +53,6 @@
 
     <div class="menu">
         <ul style="padding-left: 0rem;">
-            <li>
-                <a href="#">
-                    <i class="ph-duotone ph-question"></i>
-                    <span class="text">Ajuda</span>
-                </a>
-            </li>
-
             <li>
                 <a href="/logout/">
                     <i class="ph-fill ph-sign-out"></i>

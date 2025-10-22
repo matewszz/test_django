@@ -49,6 +49,16 @@
           </div>
 
           <div class="col-md-6 mb-3">
+            <label for="id_password" class="form-label">Cidade</label>
+            <select name="municipio" id="id_municipio" class="form-select" required>
+              <option value="">Selecione...</option>
+              {% for item in todas_cidades %}
+                <option value="{{item.id}}">{{item.municipio}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3">
             <label for="id_password" class="form-label">Senha</label>
             <input type="password" name="password" id="id_password" class="form-control" required>
           </div>
@@ -109,14 +119,14 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
-<script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+  <script>
     jQuery(document).ready(function($) {
-        $('#id_telefone').mask('(00) 00000-0000');
-        $('#id_cpf').mask('000.000.000-00', {reverse: true});
+      $('#id_telefone').mask('(00) 00000-0000');
+      $('#id_cpf').mask('000.000.000-00', {reverse: true});
 
     });
-</script>
+  </script>
 
 {% endblock %}

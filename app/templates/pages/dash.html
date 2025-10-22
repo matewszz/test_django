@@ -1,0 +1,322 @@
+{% extends "pages/base.html" %}
+
+{% block title %}Dashboard{% endblock title %}
+
+
+{% block content %}
+
+    {% include 'includes/sidebar.html' %}
+
+    <div class="focused_content" id="template_dashboard_promotional_action" style="background: #d9d9d9; min-height: 100vh;">
+        <div class="container-fluid h-100">
+            <div class="row h-100">
+                <!-- Seção esquerda -->
+                <div class="col-7 mt-3 p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="gradient-title mb-0"><b>Visão Geral</b></h3>
+                    </div>
+                    <div class="row mb-3 mt-5">
+                        <div class="col-4">
+                            <h5 class="card-title" id="title_dash_card" style="font-size: 17px;">Total de Cadastro</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                        <h2 style="font-size: 4rem; margin: 0;"><b>{{cadastro_total}}</b></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="card-title" id="title_dash_card" style="font-size: 17px;">Vacinação em dia (Total)</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="gaugeAtingimento" style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="card-title" id="title_dash_card" style="font-size: 17px;">Meta do mês</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="gaugeAssertividade" style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 id="titleByOrg" class="card-title mb-0" style="font-size: 17px;">
+                                    Atingimento total
+                                </h5>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="stateChart" style="height: 355px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-5 p-0" style="background: #ffffff; margin-top: -50px; padding-top: 50px !important; margin-bottom: -50px; padding-bottom: 80px !important;">
+                    <div class="p-4">
+                        <h5 class="gradient-title text-center"><b>Mapa das Áreas (Atrasadas)</b></h5>
+                        <div class="h-100">
+                            <div class="card-body" style="background: #d9d9d9; border-radius: 20px;">
+                                <div id="map" style="height: 1250px; width: 100%; border-radius: 8px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}
+
+{% block javascripts %}
+
+    {% comment %} CARD 2 {% endcomment %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Highcharts.chart('gaugeAtingimento', {
+                chart: {
+                    type: 'solidgauge',
+                    backgroundColor: 'transparent'
+                },
+                title: null,
+                pane: {
+                    center: ['50%', '75%'],
+                    size: '120%',
+                    startAngle: -90,
+                    endAngle: 90,
+                    background: {
+                        backgroundColor: '#EEE',
+                        innerRadius: '60%',
+                        outerRadius: '100%',
+                        shape: 'arc'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    max: 100,
+                    stops: [
+                        [0.7, '#3fdc7e']
+                    ],
+                    lineWidth: 0,
+                    tickWidth: 0,
+                    minorTickInterval: null,
+                    tickAmount: 2,
+                    labels: {
+                        y: 16
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    solidgauge: {
+                        dataLabels: {
+                            y: -25,
+                            borderWidth: 0,
+                            useHTML: true,
+                            format: '<div style="text-align:center"><span style="font-size:32px;font-weight:bold">{y}%</span></div>'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Atingimento',
+                    data: [{{ vacinaca_ok|default:0|floatformat:1 }}],
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:32px;font-weight:bold">{y}%</span></div>'
+                    }
+                }]
+            });
+
+        });
+    </script>
+
+
+    {% comment %} CARD 3 {% endcomment %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Highcharts.chart('gaugeAssertividade', {
+                chart: {
+                    type: 'solidgauge',
+                    backgroundColor: 'transparent'
+                },
+                title: null,
+                pane: {
+                    center: ['50%', '75%'],
+                    size: '120%',
+                    startAngle: -90,
+                    endAngle: 90,
+                    background: {
+                        backgroundColor: '#EEE',
+                        innerRadius: '60%',
+                        outerRadius: '100%',
+                        shape: 'arc'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    max: 100,
+                    stops: [
+                        [0.7, '#5d89df']
+                    ],
+                    lineWidth: 0,
+                    tickWidth: 0,
+                    minorTickInterval: null,
+                    tickAmount: 2,
+                    labels: {
+                        y: 16
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    solidgauge: {
+                        dataLabels: {
+                            y: -25,
+                            borderWidth: 0,
+                            useHTML: true,
+                            format: '<div style="text-align:center"><span style="font-size:32px;font-weight:bold">{y}%</span></div>'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Assertividade',
+                    data: [parseFloat('{{atrasados_mes}}')],
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:32px;font-weight:bold">{y}%</span></div>'
+                    }
+                }]
+            });
+        });
+    </script>
+
+
+    {% comment %} Gráfico 1 {% endcomment %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const stateActionData = [
+                { name: '<span class="link_dash">Total</span>', valor: {{ cadastro_total }} },
+                { name: '<span class="link_dash">Em dia</span>', valor: {{ em_dia }} },
+                { name: '<span class="link_dash">Atrasadas</span>', valor: {{ atrasadas_total }} },
+            ];
+
+            if (window.stateChart?.destroy) window.stateChart.destroy();
+
+            window.stateChart = Highcharts.chart('stateChart', {
+                chart: {
+                    type: 'bar',
+                    backgroundColor: 'transparent',
+                    height: 355
+                },
+                title: { text: null },
+                xAxis: {
+                    categories: stateActionData.map(i => i.name),
+                    labels: { useHTML: true }
+                },
+                yAxis: {
+                    min: 0,
+                    title: { text: 'Quantidade' },
+                    allowDecimals: false
+                },
+                legend: { enabled: false },
+                plotOptions: {
+                    bar: {
+                        grouping: false,
+                        borderRadius: 5,
+                        pointPadding: 0.1,
+                        groupPadding: 0.15,
+                        dataLabels: {
+                            enabled: true,
+                            inside: true,
+                            align: 'right',
+                            color: '#FFFFFF',
+                            style: {
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                textOutline: 'none'
+                            },
+                            formatter: function() {
+                                return this.y > 0 ? this.y : '';
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Vacinação',
+                    data: [
+                        { y: {{ cadastro_total }}, color: '#5d89df' },
+                        { y: {{ em_dia }}, color: '#3fdc7e' },
+                        { y: {{ atrasadas_total }}, color: '#e57373' }
+                    ]
+                }]
+            });
+        });
+    </script>
+
+
+    {% comment %} Mapa com Pontos - Mapa{% endcomment %}
+    <script>
+        const dadosGO = [
+            {% for item in localizacao %}
+                {
+                    nome: "{{ item.municipio|escapejs }} ({{ item.uf|escapejs }})",
+                    valor: {{ item.qtd|safe }},
+                    lat: {{ item.lat|safe }},
+                    lon: {{ item.lon|safe }}
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            window.map = L.map('map').setView([-30.0, -54.0], 4);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: "© OpenStreetMap", maxZoom: 18, minZoom: 3
+            }).addTo(window.map);
+
+            fetch('https://raw.githubusercontent.com/giuliano-macedo/geodata-br-states/main/geojson/br_states.json')
+                .then(resp => resp.json())
+                .then(estados => {
+                    L.geoJSON(estados, {
+                        style: { color: "#8052f9", weight: 2, fillOpacity: 0.1, fillColor: "#0dcaf0" },
+                        onEachFeature: function (feature, layer) {
+                            layer.bindPopup("Estado: " + feature.properties.NOME);
+                            layer.on('click', function () {
+                                window.map.fitBounds(layer.getBounds());
+                            });
+                        }
+                    }).addTo(window.map);
+                });
+
+        // Criar cluster group
+            window.mapMarkers = L.markerClusterGroup({
+                maxClusterRadius: 50,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false
+            });
+
+            dadosGO.forEach(d => {
+                if (d.lat != null && d.lon != null) {
+                    window.mapMarkers.addLayer(
+                        L.marker([d.lat, d.lon]).bindPopup(`<b>${d.nome}</b><br>Quantidade de atividades: ${d.valor}`)
+                    );
+                }
+            });
+
+            window.map.addLayer(window.mapMarkers);
+        });
+    </script>
+
+{% endblock %}
+
