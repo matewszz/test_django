@@ -1,0 +1,25 @@
+{% if messages %}
+  <br>
+  {% for message in messages %}
+    {% if 'success' in message.tags %}
+      <div class="message message-success">
+        <span class="fa-solid fa-circle-check"></span>&ensp;
+        {{ message }}
+      </div>
+    {% elif 'warning' in message.tags %}
+      <div class="message message-warning">
+        <span class="fas fa-exclamation-circle"></span>&ensp;
+        {{ message }}
+      </div>
+    {% elif 'error' in message.tags %}
+      <div class="message message-error">
+        <span class="fa-solid fa-triangle-exclamation"></span>&ensp;
+        {{ message }}
+      </div>
+    {% else %}
+      <div class="message">
+        {{ message }}
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}

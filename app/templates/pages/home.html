@@ -1,0 +1,66 @@
+{% extends "pages/base.html" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+    <div class="focused_content">
+        <div id="content_home">
+            <h1>Lista de Vacinas Goiás</h1>
+
+            <label for="search">Buscar por nome:</label>
+            <input type="text" id="search" placeholder="Digite o nome...">
+
+            <label for="cityFilter">Filtrar por cidade:</label>
+            <select id="cityFilter">
+                <option value="">Todas as cidades</option>
+                <option value="São Paulo">São Paulo</option>
+                <option value="Rio de Janeiro">Rio de Janeiro</option>
+                <option value="Belo Horizonte">Belo Horizonte</option>
+            </select>
+
+            <table id="vaccineTable">
+                <thead>
+                    <tr>
+                        <th>Nome da criança</th>
+                        <th>Nome do responsável</th>
+                        <th>Cidade</th>
+                        <th>Última Vacina</th>
+                        <th>Próxima Vacina</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in todas_criancas %}
+                        <tr>
+                            <td>{{item.nome}} {{item.sobrenome}}</td>
+                            <td>{{item.sobrenome}}</td>
+                            <td>São Paulo</td>
+                            <td>15/10/2023</td>
+                            <td>15/04/2024</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block javascripts %}
+    <script>
+        const originalData = Array.from(document.querySelectorAll('#vaccineTable tbody tr'));
+        function filterTable() {
+            const searchValue = document.getElementById('search').value.toLowerCase();
+            const cityValue = document.getElementById('cityFilter').value;
+            const rows = document.querySelectorAll('#vaccineTable tbody tr');
+            rows.forEach(row => {
+                const name = row.cells[0].textContent.toLowerCase();
+                const city = row.cells[1].textContent;
+                const matchesSearch = name.includes(searchValue);
+                const matchesCity = cityValue === '' || city === cityValue;
+
+                row.style.display = matchesSearch && matchesCity ? '' : 'none';
+            });
+        }
+        document.getElementById('search').addEventListener('input', filterTable);
+        document.getElementById('cityFilter').addEventListener('change', filterTable);
+    </script>
+{% endblock javascripts %}

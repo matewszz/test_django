@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / DLL files
+*/__pycache__
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+core/media/*
+
+# migrations
+*/migrations/*
+**/migrations/*
+!**/migrations/__init__.py
+*/migrations/*
+!*/migrations/__init__.py
+!helpers/__init__.py
+
+# Django stuff:
+*.log
+settings_local.py
+local_settings.py
+
+#pycharm
+.idea/*
+
+# Others
+static/downloads
+npm-debug.log
+bower_components
+node_modules
+client_profile.bundle.js
+bundle.css
+bundle.css.map
+client_profile.bundle.js.map
+.vscode
+uwsgi/*
+!uwsgi/uwsgi.ini
+bin/
+media/
+build/
+db.sqlite32
+
+# envs
+venv/*
+db.sqlite3
+.env

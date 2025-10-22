@@ -1,0 +1,95 @@
+{% load static %}
+
+<div class="sidebar active">
+    <div class="menu-btn">
+        <i class="ph-bold ph-caret-left"></i>
+    </div>
+    <div class="head">
+        <div class="user-img">
+            <div class="img">
+                <a href="/"><img src="/static/img/logo.png" alt="" /></a>
+            </div>
+        </div>
+        <div class="user-details">
+            <p class="title_sidebar">
+                <b>Supervisão</b>
+            </p>
+            <p class="name_sidebar">Mateus Matos</p>
+        </div>
+    </div>
+    <div class="nav">
+        <div class="menu">
+            <p class="title_sidebar">Soluções</p>
+            <ul style="padding-left: 0rem;">
+                {% if request.user.rule == "Administrador" %}
+                    <li>
+                        <a href="{% url "app:admin_page" %}">
+                            <i class="ph-duotone ph-user-circle-gear"></i>
+                            <span class="text">Admin Center</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="javascript:">
+                        <i class="ph-bold ph-list-checks"></i>
+                        <span class="text">Formulários</span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="">
+                                <span class="text">Divórcio</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="text">Caminho 2</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="text">Caminho 3</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="text">Caminho 4</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="">
+                        <i class="ph-light ph-calendar"></i>
+                        <span class="text">Agenda</span>
+                    </a>
+                </li>
+
+            <li>
+                    <a href="">
+                        <i class="ph-duotone ph-files"></i>
+                        <span class="text">Documentos</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="menu">
+        <ul style="padding-left: 0rem;">
+            <li>
+                <a href="#">
+                    <i class="ph-duotone ph-question"></i>
+                    <span class="text">Ajuda</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/logout/">
+                    <i class="ph-fill ph-sign-out"></i>
+                    <span class="text">Sair</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
